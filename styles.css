@@ -435,3 +435,22 @@ a:hover {
   cursor: pointer;
 }
 
+.replies {
+  margin-top: 1rem;
+}
+.status-btn {
+  position: absolute;
+  top: 1.2rem;
+  right: 13.6rem;
+  background-color: #1976d2;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.status-btn:hover {
+  background-color: #125a9c;
+}
