@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mandi Bhav – KrishiNect</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <select id="language">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+    </select>
+    <h1 id="pageTitle">📈 Mandi Bhav</h1>
+    <small id="tagline">Check real-time mandi prices</small>
+  </header>
+
+  <main>
+    <button onclick="window.location.href='index.html'" class="back-btn">← Back to Home</button>
+
+    <section class="mandi-section">
+      <table>
+        <thead>
+          <tr>
+            <th id="cropHeader">Crop</th>
+            <th id="priceHeader">Price (₹/quintal)</th>
+            <th id="locationHeader">Location</th>
+          </tr>
+        </thead>
+        <tbody id="mandiTable">
+          <!-- Rows will be filled by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDazi9i6ZyQDfPrk8gx4pc1sp2RJvA2hNM",
+  authDomain: "krishinect-39b8e.firebaseapp.com",
+  projectId: "krishinect-39b8e",
+  storageBucket: "krishinect-39b8e.firebasestorage.app",
+  messagingSenderId: "894539525913",
+  appId: "1:894539525913:web:1100591bbfc25c7148df88"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    </script>
+  <script>
+    const mandiData = [
+  { crop: "Wheat", price: 2250, location: "Kanpur" },
+  { crop: "Rice", price: 2150, location: "Lucknow" },
+  { crop: "Mustard", price: 5100, location: "Barabanki" },
+  { crop: "Mango", price: 4500, location: "Malihabad" },
+  { crop: "Banana", price: 1200, location: "Varanasi" },
+  { crop: "Tomato", price: 1600, location: "Meerut" },
+  { crop: "Onion", price: 2200, location: "Nashik" },
+  { crop: "Potato", price: 1800, location: "Agra" },
+  { crop: "Apple", price: 9000, location: "Shimla" },
+  { crop: "Cauliflower", price: 2000, location: "Gorakhpur" }
+];
+
+const mandiTable = document.getElementById("mandiTable");
+
+function loadPrices() {
+  mandiTable.innerHTML = "";
+  mandiData.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${item.crop}</td>
+      <td>${item.price}</td>
+      <td>${item.location}</td>
+    `;
+    mandiTable.appendChild(row);
+  });
+}
+
+const translations = {
+  en: {
+    pageTitle: "📈 Mandi Bhav",
+    tagline: "Check real-time mandi prices",
+    cropHeader: "Crop",
+    priceHeader: "Price (₹/quintal)",
+    locationHeader: "Location"
+  },
+  hi: {
+    pageTitle: "📈 मंडी भाव",
+    tagline: "वास्तविक मंडी मूल्य देखें",
+    cropHeader: "फसल",
+    priceHeader: "कीमत (₹/क्विंटल)",
+    locationHeader: "स्थान"
+  }
+};
+
+document.getElementById("language").addEventListener("change", function () {
+  const lang = this.value;
+  const t = translations[lang] || translations["en"];
+  document.getElementById("pageTitle").textContent = t.pageTitle;
+  document.getElementById("tagline").textContent = t.tagline;
+  document.getElementById("cropHeader").textContent = t.cropHeader;
+  document.getElementById("priceHeader").textContent = t.priceHeader;
+  document.getElementById("locationHeader").textContent = t.locationHeader;
+});
+
+document.addEventListener("DOMContentLoaded", loadPrices);
+
+  </script>
+</body>
+</html>

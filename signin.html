@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign In – KrishiNect</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+ const firebaseConfig = {
+  apiKey: "AIzaSyDX8G6-2TdazvV96p6Xdk2lyCkYe-QsQL4",
+  authDomain: "krishinect-9bb15.firebaseapp.com",
+  projectId: "krishinect-9bb15",
+  storageBucket: "krishinect-9bb15.firebasestorage.app",
+  messagingSenderId: "536593597479",
+  appId: "1:536593597479:web:0574ca0475301b7c92ba02"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.signIn = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("✅ Logged in successfully!");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("❌ Login failed: " + error.message);
+      }
+    };
+  </script>
+</head>
+<body>
+  <button class="back-btn" onclick="location.href='home.html'">← Back to Home</button>
+
+  <div class="auth-page">
+    <div class="card">
+      <h2>🔑 Sign in to KrishiNect</h2>
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button onclick="signIn()">Sign In</button>
+      <p>New user? <a href="signup.html">Create an account</a></p>
+    </div>
+  </div>
+</body>
+</html>
