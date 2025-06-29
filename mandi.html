@@ -11,7 +11,6 @@
       margin: 0;
       padding: 0;
     }
-
     header {
       background-color: #4caf50;
       color: white;
@@ -22,7 +21,6 @@
       top: 0;
       z-index: 10;
     }
-
     .back-btn {
       background-color: #4caf50;
       color: white;
@@ -32,11 +30,9 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     .mandi-section {
       padding: 1rem 2rem;
     }
-
     .state-heading {
       font-size: 1.4rem;
       color: #2e7d32;
@@ -44,7 +40,6 @@
       border-bottom: 2px solid #4caf50;
       padding-bottom: 5px;
     }
-
     table {
       width: 100%;
       margin-top: 1rem;
@@ -54,22 +49,18 @@
       border-radius: 8px;
       overflow: hidden;
     }
-
     th, td {
       padding: 12px 15px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
-
     th {
       background-color: #a5d6a7;
       color: #2e7d32;
     }
-
     tr:hover {
       background-color: #e8f5e9;
     }
-
     .no-data {
       text-align: center;
       padding: 2rem;
@@ -79,7 +70,8 @@
   </style>
 </head>
 <body>
-    <header>
+
+  <header>
     <select id="language">
       <option value="en">English</option>
       <option value="hi">हिन्दी</option>
@@ -98,18 +90,41 @@
 
   <button class="back-btn" onclick="window.location.href='index.html'">← Back to Home</button>
 
+  <div style="text-align: center; margin-bottom: 20px;">
+    <label for="cropFilter"><strong>🔍 Filter by Crop:</strong></label>
+    <input type="text" id="cropFilter" placeholder="e.g., Wheat, Tomato" oninput="filterMandiData()" />
+  </div>
+
   <div class="mandi-section" id="mandiContainer">
     <p class="no-data">Loading latest mandi prices...</p>
   </div>
 
   <script>
-    fetch("http://localhost:3000/mandi") // replace with deployed URL if needed
+    let mandiData = [];
+
+    // Fetching mandi data
+    fetch("http://localhost:3000/mandi") // ✅ Replace this with actual deployed URL if needed
       .then(res => res.json())
       .then(data => {
-        const container = document.getElementById("mandiContainer");
-        container.innerHTML = "";
+        mandiData = data;
+        renderMandiData(); // initial render
+      })
+      .catch(err => {
+        document.getElementById("mandiContainer").innerHTML = "<p class='no-data'>❌ Failed to load data.</p>";
+        console.error("Error fetching mandi data:", err);
+      });
 
-        data.forEach(state => {
+    function renderMandiData(filteredCrop = "") {
+      const container = document.getElementById("mandiContainer");
+      container.innerHTML = "";
+
+      mandiData.forEach(state => {
+        // Filter crops based on input
+        const filteredData = state.data.filter(entry =>
+          !filteredCrop || entry.crop.toLowerCase().includes(filteredCrop.toLowerCase())
+        );
+
+        if (filteredData.length > 0) {
           const section = document.createElement("div");
 
           const heading = document.createElement("h3");
@@ -126,7 +141,7 @@
               </tr>
             </thead>
             <tbody>
-              ${state.data.map(entry => `
+              ${filteredData.map(entry => `
                 <tr>
                   <td>${entry.crop}</td>
                   <td>${entry.mandi}</td>
@@ -139,12 +154,19 @@
           section.appendChild(heading);
           section.appendChild(table);
           container.appendChild(section);
-        });
-      })
-      .catch(err => {
-        document.getElementById("mandiContainer").innerHTML = "<p class='no-data'>Failed to load data.</p>";
-        console.error("Error fetching mandi data:", err);
+        }
       });
+
+      if (container.innerHTML.trim() === "") {
+        container.innerHTML = "<p class='no-data'>🔍 No matching crops found.</p>";
+      }
+    }
+
+    function filterMandiData() {
+      const crop = document.getElementById("cropFilter").value;
+      renderMandiData(crop);
+    }
   </script>
+
 </body>
 </html>

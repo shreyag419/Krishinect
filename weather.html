@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KrishiNect - Weather</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #d4efdf, #eaf6f6);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #2e7d32;
+    }
+
+    #weatherInfo {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .advisory-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .advisory-btn:hover {
+      background-color: #43a047;
+    }
+
+    .dashboard-btn {
+      background-color: #f1f1f1;
+      color: #444;
+    }
+
+    .dashboard-btn:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🌦️ Current Weather</h2>
+
+    <label for="city">Select Location:</label>
+    <select id="city" onchange="getWeather()">
+      <option value="Delhi">Delhi</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Lucknow">Lucknow</option>
+      <option value="Patna">Patna</option>
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Bhopal">Bhopal</option>
+      <option value="Jaipur">Jaipur</option>
+      <option value="Ranchi">Ranchi</option>
+    </select>
+
+    <div id="weatherInfo">Fetching latest weather...</div>
+
+    <button class="btn advisory-btn" onclick="directToSuggestions()">🌿 Get Smart Suggestions</button>
+
+    <button class="btn advisory-btn" onclick="redirectToAdvisory()">🌱 Go to Crop Advisory</button>
+    <button class="btn dashboard-btn" onclick="goBackToDashboard()">🏠 Back to Dashboard</button>
+  </div>
+
+  <script>
+  const apiKey = '5750870c11d49a9027ab1b02d24e34fc';
+
+  function getWeather() {
+    const city = document.getElementById('city').value;
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Weather API error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('weatherInfo').innerHTML = `
+          <p><strong>City:</strong> ${data.name}</p>
+          <p><strong>Temperature:</strong> ${data.main.temp}°C</p>
+          <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+          <p><strong>Condition:</strong> ${data.weather[0].description}</p>
+        `;
+      })
+      .catch(error => {
+        document.getElementById('weatherInfo').innerHTML = `❌ Error fetching weather: ${error.message}`;
+        console.error(error);
+      });
+  }
+
+  function redirectToAdvisory() {
+    window.location.href = 'advisory.html'; // change path if needed
+  }
+
+  function goBackToDashboard() {
+    window.location.href = 'index.html'; // change path if needed
+  }
+
+  function directToSuggestions() {
+  window.location.href = "suggest.html";
+}
+
+
+  // Load default city on page load
+  window.onload = getWeather;
+</script>
+
+</body>
+</html>

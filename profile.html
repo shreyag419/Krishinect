@@ -3,21 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <title>Farmer Profile – KrishiNect</title>
-  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style src="styles.css"></style>
   <style>
     body {
-      background-color: #f4fff4;
+      background-color: #bce3c9;
       font-family: 'Segoe UI', sans-serif;
+      margin: 0;
     }
-
+    .back-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  margin: 20px 570px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 200px;
+}
+.back-btn:hover {
+  background-color: #388e3c;
+}
     .header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 1rem 2rem;
       background: #4caf50;
       color: white;
-      height: 80px;
+    }
+
+    .logout-btn {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: #b71c1c;
     }
 
     .profile-header {
@@ -26,15 +53,58 @@
     }
 
     .profile-header h2 {
-      color: #2e7d32;
+      color: #388e3c;
       font-size: 2rem;
+    }
+
+    .profile-summary {
+      color: #333;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: white;
+      padding: 1.5rem;
+      border-left: 6px solid #4caf50;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin: 1rem auto 2rem;
+      max-width: 900px;
+      gap: 2rem;
+    }
+
+    .left-column, .right-column {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .profile-card p {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+      color: #333;
+    }
+
+    .user-name {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #4caf50;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      text-align: center;
+      color: #388e3c;
     }
 
     .listing-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
-      padding: 2rem;
+      padding: 1rem 2rem;
       max-width: 1100px;
       margin: auto;
     }
@@ -75,82 +145,55 @@
     .delete-btn:hover {
       background: #b71c1c;
     }
-
-    .logout-btn {
-      background: #d32f2f;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .logout-btn:hover {
-      background: #c62828;
-    }
-
-    .profile-summary {
-      text-align: center;
-      margin-top: -1rem;
-      color: #333;
-    }
-
-    .back-btn {
-      justify-self: left;
-      background: white;
-      border: 1px solid #4caf50;
-      padding: 8px 14px;
-      border-radius: 6px;
-      color: #2e7d32;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .back-btn:hover {
-      background: #e8f5e9;
-    }
   </style>
 </head>
 <body>
 
   <div class="header">
-    
+    <h2>KrishiNect</h2>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <div class="profile-header">
-    
-    <h2 id="welcome">Welcome, Farmer!</h2>
-    <p class="profile-summary" id="emailDisplay"></p>
-    <h3 style="margin-top: 2rem;">Your Crop Listings:</h3>
-    <button class="back-btn" onclick="window.location.href='index.html'">← Back to Dashboard</button>
+    <h2 id="welcome">Welcome!</h2>
+    <p class="profile-summary" id="emailDisplay">Loading...</p>
+  </div>
+  <button onclick="window.location.href='index.html'" class="back-btn">← Back to Home</button>
+  <div class="profile-card">
+    <div class="left-column">
+      <p><strong>📧 Email:</strong> <span id="emailValue">---</span></p>
+      <p><strong>🆔 UID:</strong> <span id="uidValue">---</span></p>
+      <p><strong>📅 Joined:</strong> <span id="joinedValue">---</span></p>
+      <p><strong>🗣 Preferred Language:</strong> English</p>
+    </div>
+    <div class="right-column">
+      <p><strong>🌾 Crops Listed:</strong> <span id="cropCount">0</span></p>
+      <p><strong>📍 Location:</strong> Aligarh</p>
+      <p><strong>✅ Profile Status:</strong> Complete</p>
+      <p><strong>⏱ Last Login:</strong> Today</p>
+    </div>
   </div>
 
-  <div id="myListings" class="listing-grid"></div>
-  
+  <h3>Your Crop Listings</h3>
+  <div class="listing-grid" id="myListings"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth, onAuthStateChanged, signOut
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-      getFirestore, collection, query, where, getDocs, deleteDoc, doc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
-  apiKey: "AIzaSyDX8G6-2TdazvV96p6Xdk2lyCkYe-QsQL4",
-  authDomain: "krishinect-9bb15.firebaseapp.com",
-  projectId: "krishinect-9bb15",
-  storageBucket: "krishinect-9bb15.firebasestorage.app",
-  messagingSenderId: "536593597479",
-  appId: "1:536593597479:web:0574ca0475301b7c92ba02"
+      apiKey: "AIzaSyDazi9i6ZyQDfPrk8gx4pc1sp2RJvA2hNM",
+      authDomain: "krishinect-39b8e.firebaseapp.com",
+      projectId: "krishinect-39b8e",
+      storageBucket: "krishinect-39b8e.appspot.com",
+      messagingSenderId: "894539525913",
+      appId: "1:894539525913:web:1100591bbfc25c7148df88"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
     let currentUser;
 
     onAuthStateChanged(auth, async (user) => {
@@ -160,8 +203,14 @@
       }
 
       currentUser = user;
-      document.getElementById("welcome").textContent = `Welcome, ${user.displayName || user.email.split("@")[0].toUpperCase()}!`;
+      const name = user.displayName || user.email.split("@")[0].toUpperCase();
+
+      document.getElementById("welcome").textContent = `Welcome, ${name}!`;
       document.getElementById("emailDisplay").textContent = user.email;
+      document.getElementById("emailValue").textContent = user.email;
+      document.getElementById("uidValue").textContent = user.uid;
+      document.getElementById("joinedValue").textContent = new Date(user.metadata.creationTime).toLocaleDateString();
+
       loadMyListings();
     });
 
@@ -169,7 +218,10 @@
       const q = query(collection(db, "listings"), where("userId", "==", currentUser.uid));
       const querySnapshot = await getDocs(q);
       const container = document.getElementById("myListings");
+      const cropCount = document.getElementById("cropCount");
       container.innerHTML = "";
+
+      cropCount.textContent = querySnapshot.size;
 
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data();
@@ -189,8 +241,7 @@
     }
 
     window.deleteListing = async function (id) {
-      const confirmDelete = confirm("Are you sure you want to delete this listing?");
-      if (confirmDelete) {
+      if (confirm("Are you sure you want to delete this listing?")) {
         await deleteDoc(doc(db, "listings", id));
         loadMyListings();
       }

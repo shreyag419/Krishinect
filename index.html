@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KrishiNect – Smart Agriculture</title>
   <link rel="stylesheet" href="styles.css" />
+
+  </style>
 </head>
 <body>
   <header>
@@ -25,7 +27,7 @@
 <button class="profile-btn" onclick="goToProfile()">👤 Profile</button>
 <button class="logout-btn" onclick="logout()">Logout</button>
 
-    KrishiNect
+    <h1 id="pageTitle">KrishiNect</h1>
     <small id="tagline">~Har Kisan Ka Digital Saathi~</small>
   </header>
 
@@ -53,6 +55,79 @@
   <p id="forumDesc">Discuss local issues, market prices, and farming challenges with fellow farmers.</p>
 </div>
 </div>
+<!-- WEATHER BUTTON AT BOTTOM -->
+<div style="text-align: center; margin: 40px 0;">
+  <button onclick="location.href='weather.html'" style="
+    position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 999;
+  ">
+    🌦️ Check Weather
+  </button>
+</div>
+<!-- 💬 FAQ Chatbot Toggle Button -->
+<!-- Floating Chatbot Toggle Button -->
+<button id="chatToggle" onclick="toggleChat()" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  z-index: 1000;
+">
+💬
+</button>
+
+<!-- Chatbot Box (initially hidden) -->
+<div id="chatbotBox" style="
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  background: #f4fff4;
+  padding: 10px;
+  display: none;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+">
+  <div id="chatMessages" style="
+    height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #c8e6c9;
+  "></div>
+  <div style="display: flex; gap: 6px;">
+  <input type="text" id="chatInput" placeholder="Ask something..." style="flex: 1;" />
+  <button onclick="sendMessage()">Send</button>
+  <button onclick="startVoiceRecognition()" title="Speak" style="
+    background: #f1f8e9;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    cursor: pointer;
+  ">🎤</button>
+</div>
+
+
 </main>
 
 <script type="module">
@@ -61,13 +136,13 @@
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";    
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-  apiKey: "AIzaSyDX8G6-2TdazvV96p6Xdk2lyCkYe-QsQL4",
-  authDomain: "krishinect-9bb15.firebaseapp.com",
-  projectId: "krishinect-9bb15",
-  storageBucket: "krishinect-9bb15.firebasestorage.app",
-  messagingSenderId: "536593597479",
-  appId: "1:536593597479:web:0574ca0475301b7c92ba02"
+const firebaseConfig = {
+  apiKey: "AIzaSyDazi9i6ZyQDfPrk8gx4pc1sp2RJvA2hNM",
+  authDomain: "krishinect-39b8e.firebaseapp.com",
+  projectId: "krishinect-39b8e",
+  storageBucket: "krishinect-39b8e.firebasestorage.app",
+  messagingSenderId: "894539525913",
+  appId: "1:894539525913:web:1100591bbfc25c7148df88"
 };
 
     const app = initializeApp(firebaseConfig);
@@ -83,6 +158,7 @@ onAuthStateChanged(auth, (user) => {
 
 
 const db = getFirestore(app);
+
 
   // Logout function
   window.logout = async function () {
@@ -103,5 +179,148 @@ const db = getFirestore(app);
 </script>
 
   <script src="app.js"></script>
+  <script>
+  function toggleChat() {
+    const box = document.getElementById("chatbotBox");
+    box.style.display = box.style.display === "none" ? "block" : "none";
+  }
+
+  const keywords = [
+  {
+    words: ["hello", "hi", "hey", "namaste", "salaam", "ram ram", "yo", "bhai", "pranam", "adar"],
+    answer: "👋 Namaste! Aapka KrishiNect mein swagat hai. Kuch poochhna ho toh seedhe likh do!"
+  },
+  {
+    words: ["post", "sell", "add", "list", "upload", "submit", "fasal", "bikri", "bechna", "bhejna"],
+    answer: "Apni fasal bechni hai? Bas 'Post Crop' pe click karo aur detail bhar do."
+  },
+  {
+    words: ["mandi", "price", "rate", "bhav", "market", "cost", "mandi bhav", "bhav kya hai", "daam"],
+    answer: "Mandi ke aaj ke bhav ke liye 'Mandi Bhav' section check karo. Real-time prices milenge."
+  },
+  {
+    words: ["advice", "tip", "suggestion", "guide", "help", "care", "fertilizer", "suggest karo", "salah", "tips", "guidance"],
+    answer: "'Crop Advisory' section mein aapko farming ke expert tips mil jayenge, woh bhi local bhasha mein!"
+  },
+  {
+    words: ["weather", "rain", "temperature", "forecast", "climate", "sun", "wind", "barsaat", "mausam", "aaj ka mausam"],
+    answer: "'Check Weather' button dabao neeche. Aapke area ka full forecast milega."
+  },
+  {
+    words: ["profile", "info", "account", "details", "data", "id", "login", "mera profile", "khaata", "user"],
+    answer: "'Profile' page mein aapki details, crops listed aur last login sab dikh jaayega."
+  },
+  {
+    words: ["language", "hindi", "english", "change", "switch", "bhasha", "language badlo", "urdu", "punjabi", "marathi"],
+    answer: "Language badalni hai? Page ke top-left dropdown se select kar lo apni language."
+  },
+  {
+    words: ["forum", "community", "discuss", "talk", "people", "group", "baatcheet", "samudaay", "kisan mitra", "discussion"],
+    answer: "'Community Forum' pe jaake dusre kisano se baat karo aur experience share karo."
+  },
+  {
+    words: ["request", "status", "complaint", "issue", "problem", "report", "samasyayen", "report karo", "shikayat"],
+    answer: "'Requests' section mein jaake apni complaint ka status dekh sakte ho. Sab track hota hai!"
+  },
+  {
+    words: ["logout", "exit", "signout", "log out", "bahar nikal", "sign off", "account close"],
+    answer: "'Logout' button screen ke upar right corner mein hai. Click karo aur logout ho jao."
+  },
+  {
+    words: ["support", "help", "chat", "bot", "madad", "madad karo", "chatbot", "kya karu", "confuse"],
+    answer: "Main aapka KrishiNect chatbot hoon. Mandi, mausam, ya crop ki info chahiye toh bas puchho! Agar aapko turant madad chahiye, aap Govt of India ke Kisan Call Centre par sampark kar sakte hain:  **1800-180-1551** (Toll-Free, 6AM–10PM). Yeh kendra aapki kheti, beema, ya mandi se judi samasya mein madad karega."
+  },
+  {
+    words: ["how", "where", "what", "can", "why", "kaise", "kab", "kaun", "kidhar", "kahan", "kaunse"],
+    answer: "Puchho jo puchhna hai — mandi ka bhav, mausam, post kaise kare — sab ka jawab milega!"
+  },
+  {
+    words: ["home", "main", "start", "begin", "homepage", "shuru", "home pe le chalo", "dashboard"],
+    answer: "Aap home page pe ho. Yahan se crop post kar sakte ho, bhav dekh sakte ho, ya salah le sakte ho."
+  },
+  {
+    words: ["bank", "loan", "paisa", "money", "credit", "payment", "udhaar", "finance"],
+    answer: "Abhi KrishiNect mein microloan feature beta mode mein hai. Jaldi hi available hoga!"
+  },
+  {
+    words: ["insurance", "beema", "fasal beema", "claim"],
+    answer: "Fasal beema ke baare mein jankari advisory section ya forum se mil sakti hai."
+  },
+  {
+    words: ["fertilizer", "khad", "pesticide", "dawai", "spray", "keetnashak"],
+    answer: "Right fertilizer ya spray ke liye 'Crop Advisory' section mein check karo."
+  }
+];
+
+
+  function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim().toLowerCase();
+  if (!message) return;
+
+  addMessage("You", message);
+
+  let found = false;
+
+  for (let pair of keywords) {
+    for (let word of pair.words) {
+      if (message.includes(word)) {
+        addMessage("Bot", pair.answer);
+        found = true;
+        break;
+      }
+    }
+    if (found) break;
+  }
+
+  if (!found) {
+    addMessage("Bot", "🤔 Sorry, I didn’t understand that. Try keywords like 'crop', 'mandi', or 'weather'.");
+  }
+
+  input.value = "";
+}
+
+
+  function addMessage(sender, text) {
+    const chat = document.getElementById("chatMessages");
+    const msg = document.createElement("div");
+    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function startVoiceRecognition() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("Sorry, your browser does not support voice recognition.");
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-IN';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.start();
+
+  recognition.onstart = () => {
+    addMessage("Bot", "🎙 Listening...");
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById("chatInput").value = transcript;
+    sendMessage(); // auto-send on result
+  };
+
+  recognition.onerror = (event) => {
+    addMessage("Bot", `⚠️ Voice error: ${event.error}`);
+  };
+
+  recognition.onend = () => {
+    console.log("Voice recognition ended.");
+  };
+}
+
+</script>
+
 </body>
 </html>

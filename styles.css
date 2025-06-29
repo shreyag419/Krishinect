@@ -454,3 +454,54 @@ a:hover {
 .status-btn:hover {
   background-color: #125a9c;
 }
+.profile-container {
+  background: #b9ddbe; /* Light green background */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin: 2rem auto;
+  max-width: 900px;
+  text-align: center;
+}
+
+.profile-container h2 {
+  color: #0b0b0b;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-container h3 {
+  color: #0a0a0a;
+  margin-bottom: 1rem;
+}
+
+.profile-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background: white;
+  padding: 1.5rem;
+  border-left: 6px solid #4caf50;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  gap: 2rem;
+  text-align: left;
+}
+
+.left-column, .right-column {
+  flex: 1;
+  min-width: 250px;
+}
+
+.profile-card p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.user-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #4caf50;
+}

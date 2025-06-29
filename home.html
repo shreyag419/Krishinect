@@ -45,17 +45,7 @@
       border: none;
     }
 
-    /* Hero */
-    .home-wrapper {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(to right, #c8e6c9, #a5d6a7);
-      text-align: center;
-      padding: 2rem;
-    }
+    
 
     .home-title {
       font-size: 3rem;
@@ -308,12 +298,38 @@
         align-items: flex-start;
       }
     }
+    #bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 2; /* Optional: adjust brightness */
+}
+
+
+    .home-wrapper{
+      position: relative;
+      width: auto;
+      height: max-content;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      margin-top: 20%;
+    }
+
+
+
   </style>
   <!-- Font Awesome for icons -->
  
 </head>
 
 <body>
+  
   <!-- Navbar -->
 <nav>
   <div class="nav-title">🌾 KrishiNect</div>
@@ -336,6 +352,9 @@
   </div>
 </nav>
 
+ <video autoplay muted loop id="bgVideo">
+  <source src="myideo.mp4" type="video/mp4" />
+</video>
 <!-- Hero Section -->
 <div class="home-wrapper">
   <div class="home-title" id="home-title">🌿 Welcome to KrishiNect</div>
@@ -437,12 +456,12 @@
   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
-  apiKey: "AIzaSyDX8G6-2TdazvV96p6Xdk2lyCkYe-QsQL4",
-  authDomain: "krishinect-9bb15.firebaseapp.com",
-  projectId: "krishinect-9bb15",
-  storageBucket: "krishinect-9bb15.firebasestorage.app",
-  messagingSenderId: "536593597479",
-  appId: "1:536593597479:web:0574ca0475301b7c92ba02"
+    apiKey: "AIzaSyDazi9i6ZyQDfPrk8gx4pc1sp2RJvA2hNM",
+    authDomain: "krishinect-39b8e.firebaseapp.com",
+    projectId: "krishinect-39b8e",
+    storageBucket: "krishinect-39b8e.appspot.com",
+    messagingSenderId: "894539525913",
+    appId: "1:894539525913:web:1100591bbfc25c7148df88"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -481,6 +500,7 @@
 
   const translations = {
     en: {
+      homeTitle: "Welcome to KrishiNect",
       subtitle: "Har Kisan Ka Digital Saathi",
       about: "About",
       navfeatures: "Features",
@@ -507,6 +527,7 @@
     contactIntro:""
     },
     hi: {
+      homeTitle: "कृषीनेक्ट में आपका स्वागत है",
       subtitle: "हर किसान का डिजिटल साथी",
       about: "परिचय",
       navfeatures: "विशेषताएँ",
@@ -533,6 +554,7 @@
     contactIntro:"आपके सुझाव, प्रतिक्रिया या सहयोग का स्वागत है! हम आपकी बात सुनना चाहेंगे।"
     },
     pa: {
+      homeTitle: "ਕ੍ਰਿਸ਼ੀਨੇਕਟ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ",
       subtitle: "ਹਰ ਕਿਸਾਨ ਦਾ ਡਿਜੀਟਲ ਸਾਥੀ",
       about: "ਬਾਰੇ",
       navfeatures: "ਖਾਸੀਅਤਾਂ",
@@ -560,6 +582,7 @@ contactIntro:"ਤੁਹਾਡੇ ਸੁਝਾਅ, ਫੀਡਬੈਕ ਜਾਂ �
 
     },
     mr: {
+      homeTitle: "कृषीनेक्टमध्ये तुमचं स्वागत आहे",
       subtitle: "प्रत्येक शेतकऱ्याचा डिजिटल साथी",
       about: "आमच्याबद्दल",
       navfeatures: "वैशिष्ट्ये",
@@ -587,6 +610,7 @@ contactIntro:"आपल्या अभिप्राय, सूचना क�
 
     },
     bn: {
+      homeTitle: "কৃষিনেক্ট-এ আপনাকে স্বাগতম",
       subtitle: "প্রত্যেক কৃষকের ডিজিটাল সাথি",
       about: "আমাদের সম্পর্কে",
       navfeatures: "বৈশিষ্ট্যাবলী",
@@ -614,6 +638,7 @@ contactIntro:"আপনার মতামত, পরামর্শ বা স�
 
     },
     ta: {
+      homeTitle: "கிரிஷிநெக்டுக்கு வரவேற்கிறோம்",
       subtitle: "ஒவ்வொரு விவசாயியின் டிஜிட்டல் துணை",
       about: "எங்களை பற்றி",
       navfeatures: "அம்சங்கள்",
@@ -641,6 +666,7 @@ contactIntro:"உங்கள் கருத்துகள், பரிந்
 
     },
     te: {
+      homeTitle: "కృషినెక్ట్‌కి స్వాగతం",
       subtitle: "ప్రతి రైతుకి డిజిటల్ తోడు",
       about: "మా గురించి",
       navfeatures: "లక్షణాలు",
@@ -669,6 +695,7 @@ contactIntro:"మీ అభిప్రాయాలు, సూచనలు ల�
 
     },
     gu: {
+      homeTitle:"કૃષિનેક્ટમાં આપનું સ્વાગત છે",
       subtitle: "દર ખેડૂતનો ડિજિટલ સાથી",
       about: "અમારા વિશે",
       navfeatures: "વિશેષતાઓ",
@@ -696,6 +723,7 @@ contactIntro:"તમારા પ્રતિસાદ, સૂચનો કે �
 
     },
     kn: {
+      homeTitle:"ಕೃಷಿನೆಕ್ಟ್‌ಗೆ ಸ್ವಾಗತ",
       subtitle: "ಪ್ರತಿ ರೈತನ ಡಿಜಿಟಲ್ ಸಹಾಯ",
       about: "ನಮ್ಮ ಬಗ್ಗೆ",
       navfeatures: "ಲಕ್ಷಣಗಳು",
@@ -723,6 +751,7 @@ contactIntro:"ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ, ಸಲಹೆಗ
 
     },
     ur: {
+      homeTitle: "اردو – کرشینیکٹ میں خوش آمدید",
       subtitle: "ہر کسان کا ڈیجیٹل ساتھی",
       about: "ہمارے بارے میں",
       navfeatures: "خصوصیات",
@@ -759,7 +788,7 @@ contactIntro:"اگر آپ کے پاس تجاویز، رائے یا تعاون ک
     const lang = this.value;
     const t = translations[lang] || translations["en"];
 
-   
+   document.getElementById("home-title").innerText = t.homeTitle;
     document.getElementById("homeSubtitle").innerText = t.subtitle;
     document.getElementById("navAbout").innerText = t.about;
     document.getElementById("navFeatures").innerText = t.navfeatures;

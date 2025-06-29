@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌿 Smart Crop Suggestions – KrishiNect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #388e3c;
+      color: white;
+      padding: 1.2rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 2rem 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    select, button {
+      padding: 10px 14px;
+      font-size: 1rem;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #e8f5e9;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    #advisoryBox {
+      background: #ffffff;
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      color: #2e7d32;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+  .chat-toggle-btn {
+    background: #388e3c;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .chat-toggle-btn:hover {
+    background: #2e7d32;
+  }
+
+  .chatbot-box {
+    display: none;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #f9fdf9;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .chat-header {
+    background: #4caf50;
+    color: white;
+    padding: 12px 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chat-close {
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+
+  .chat-messages {
+    height: 260px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .chat-messages div {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 75%;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+
+  .chat-messages .user {
+    background: #e0f7fa;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .chat-messages .bot {
+    background: #e8f5e9;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+  }
+
+  .chat-input-area {
+    display: flex;
+    border-top: 1px solid #ddd;
+  }
+
+  .chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .chat-input-area button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+</style>
+
+</head>
+<body>
+
+  <header>🌿 Smart Suggestions</header>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">← Back to Dashboard</button>
+
+  <div class="container">
+    <h2>Check Weather-based Advisory</h2>
+
+    <select id="citySelect">
+      <option value="Delhi">Delhi</option>
+      <option value="Lucknow">Lucknow</option>
+      <option value="Bhopal">Bhopal</option>
+      <option value="Nagpur">Nagpur</option>
+      <option value="Patna">Patna</option>
+    </select>
+
+    <button onclick="showWeatherAdvisory()">🔍 Get Suggestions</button>
+
+    <div id="advisoryBox">Please select a location to get smart crop advice based on weather.</div>
+  </div>
+<!-- Crop Pest Advice Chatbot -->
+<div style="text-align: center; margin: 30px;">
+  <p><strong>🧪 Click for Pest Advice</strong></p>
+  <button onclick="toggleChatbox()" class="chat-toggle-btn">💬 Open Crop Advisor</button>
+</div>
+
+<div id="chatbotContainer" class="chatbot-box">
+  <div class="chat-header">
+    🌾 Pest Advisor
+    <span class="chat-close" onclick="toggleChatbox()">✖</span>
+  </div>
+
+  <div class="crop-buttons" id="cropButtons">
+    <!-- Buttons inserted by JS -->
+  </div>
+
+  <div id="chatMessages" class="chat-messages"></div>
+</div>
+
+
+
+
+  <script>
+    async function getWeather(city) {
+      const apiKey = "5750870c11d49a9027ab1b02d24e34fc"; // Replace this
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+      const response = await fetch(url);
+      return await response.json();
+    }
+
+      function generateAdvisory(weather) {
+  const temp = weather.main.temp;
+  const humidity = weather.main.humidity;
+  const wind = weather.wind.speed;
+  const condition = weather.weather[0].main.toLowerCase();
+
+  let message = `📍 Location: ${weather.name}\n🌡️ Temp: ${temp}°C, 💧 Humidity: ${humidity}%, 💨 Wind: ${wind} m/s, ☁️ Condition: ${condition}\n\n`;
+
+  if (condition.includes("rain") || condition.includes("drizzle")) {
+    message += "☔ *Barish ke karan dawa chhidkaav aur harvesting se bachein.*\n💡 Nadi ke paas wali zameen par dhyan dein aur paani ka jamav rokhein.\n🚜 Zarurat ho to drainage ka intezam karein.\n\n";
+  }
+
+  if (condition.includes("thunderstorm")) {
+    message += "⚡ *Bijli aur aandhi ke karan bahar ka kaam tal dein.*\n🔒 Kisan aur janwar surakshit jagah par rakhein.\n\n";
+  }
+
+  if (humidity > 90) {
+    message += "🦠 *High humidity hai — fungal bimari jaise blight ya rust ke chances hain.*\n🧪 Neem oil ya copper-based fungicide ka prayog karein.\n\n";
+  }
+
+  if (temp > 38) {
+    message += "🔥 *Garmi zyada hai — podhon ko jalne se bachane ke liye shaam ko paani dein.*\n🌿 Organic mulch se zameen ki nami banayein rakhein.\n\n";
+  } else if (temp >= 30 && temp <= 38) {
+    message += "☀️ *Mausam garm hai lekin kheti ke liye theek hai.*\n💧 Din mein do baar halka paani dein.\n\n";
+  }
+
+  if (temp < 12) {
+    message += "❄️ *Thandi bahut hai — beej ka germination affected ho sakta hai.*\n🧣 Net ya polythene cover ka use karein.\n\n";
+  }
+
+  if (wind > 10) {
+    message += "🌬️ *Tez hawa chal rahi hai — kamzor podhon ko support dein.*\n⚠️ Plastic mulch ko udaav se bachayein.\n\n";
+  }
+
+  if (!condition.includes("rain") && temp >= 20 && temp <= 32 && humidity >= 40 && humidity <= 80) {
+    message += "✅ *Mausam kheti ke liye anukul hai — beej ropan, chhidkaav ya harvesting kar sakte hain.*\n🚜 Din ki shuruaat mein kaam karna behtar rahega.\n\n";
+  }
+
+  if (humidity < 30) {
+    message += "💨 *Humidity kam hai — zyada sukha pad sakta hai.*\n💧 Frequent irrigation ki zarurat ho sakti hai.\n\n";
+  }
+
+  message += "📢 *Tip:* Mausam ke hisaab se fasal jaise moong, til, bajra ya chawal ka vikalp chun sakte hain.\n🔍 Crop advisory section mein aur jaankari milegi.";
+
+  return message;
+}
+
+
+    async function showWeatherAdvisory() {
+      const city = document.getElementById("citySelect").value;
+      const advisoryBox = document.getElementById("advisoryBox");
+
+      try {
+        advisoryBox.innerHTML = "⏳ Fetching weather data...";
+        const weather = await getWeather(city);
+
+        if (weather.cod === 200) {
+          const advice = generateAdvisory(weather);
+          advisoryBox.innerHTML = advice.replace(/\n/g, "<br>");
+        } else {
+          advisoryBox.innerHTML = "❌ Unable to fetch data for this city. Please try another.";
+        }
+      } catch (error) {
+        advisoryBox.innerHTML = "⚠️ Error fetching data. Check your internet or try later.";
+        console.error(error);
+      }
+    }
+  </script>
+
+<script>
+const pestAdvice = {
+  wheat: "🌾 *Gehun (Wheat)*: Aphid ya termite dikh rahe hain to neem tel ka spray karein ya chlorpyrifos ka halka prayog karein.",
+  rice: "🌾 *Dhaan (Rice)*: Stem borer ke liye pheromone trap lagayein. Brown planthopper ke liye neem-based spray use karein.",
+  cotton: "🧷 *Kapas (Cotton)*: Whitefly aur pink bollworm ke liye neem spray aur light traps ka use karein.",
+  tomato: "🍅 *Tamatar (Tomato)*: Leaf curl ya fruit borer ke liye neem oil spray karein. Whitefly ke liye yellow sticky traps.",
+  potato: "🥔 *Aloo (Potato)*: Blight se bachav ke liye mancozeb ka spray karein. Drainage sudharein.",
+  mustard: "🌿 *Sarso (Mustard)*: Aphid ya sawfly ke liye neem dawa ya chlorpyrifos ka spray karein.",
+  soybean: "🌱 *Soya (Soybean)*: Leaf miner ke liye neem spray ya acephate ka prayog karein.",
+  maize: "🌽 *Makka (Maize)*: Fall armyworm ke liye pheromone traps aur neem oil spray karein.",
+  chili: "🌶️ *Mirch (Chili)*: Thrips ya mite ho to spinosad ya neem spray ka upyog karein."
+};
+
+function toggleChatbox() {
+  const box = document.getElementById("chatbotContainer");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+// Render crop buttons
+window.onload = () => {
+  const crops = Object.keys(pestAdvice);
+  const cropBtnDiv = document.getElementById("cropButtons");
+  crops.forEach(crop => {
+    const btn = document.createElement("button");
+    btn.textContent = crop.charAt(0).toUpperCase() + crop.slice(1);
+    btn.className = "crop-btn";
+    btn.onclick = () => showAdvice(crop);
+    cropBtnDiv.appendChild(btn);
+  });
+};
+
+function showAdvice(crop) {
+  const advice = pestAdvice[crop];
+  addMessage("👨‍🌾 You", crop.charAt(0).toUpperCase() + crop.slice(1));
+  addMessage("🤖 Advisor", advice);
+}
+
+function addMessage(sender, text) {
+  const chat = document.getElementById("chatMessages");
+  const msg = document.createElement("div");
+  msg.className = sender.includes("You") ? "user" : "bot";
+  msg.innerHTML = `<strong>${sender}:</strong><br>${text}`;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+
+</body>
+</html>
