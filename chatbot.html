@@ -2,85 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KrishiNect Q&A Bot (Keyword Match)</title>
-  <style>
-    #chatbotBox {
-      width: 350px;
-      margin: 50px auto;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 1rem;
-      font-family: Arial, sans-serif;
-    }
-    #chatMessages {
-      height: 250px;
-      overflow-y: auto;
-      background: #f4fff4;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 1rem;
-    }
-    button {
-      cursor: pointer;
-    }
-  </style>
+  <title>GPT-Trainer Test</title>
 </head>
 <body>
+  <div id="gpt-trainer-widget"></div>
 
-<div id="chatbotBox">
-  <div id="chatMessages"></div>
-  <input type="text" id="chatInput" placeholder="Ask something like 'crop' or 'mandi'" />
-  <button onclick="sendMessage()">Send</button>
-</div>
+  <script>
+    window.GPTTConfig = {
+      uuid: "8789a527c21548a8b3aaa1383ea890e3",
+      selector: "#gpt-trainer-widget"
+    };
 
-<script>
-  const keywords = [
-    { words: ["post", "sell", "add"], answer: "To post a crop, click 'Post Crop' and fill in the details." },
-    { words: ["mandi", "price", "rate"], answer: "To see mandi prices, click 'Mandi Bhav' on the dashboard." },
-    { words: ["advice", "tip", "suggestion"], answer: "Get tips from the 'Crop Advisory' section in your language." },
-    { words: ["weather", "rain", "temperature"], answer: "Click the 'Check Weather' button to see the forecast." },
-    { words: ["profile", "info", "account"], answer: "Your profile has your info, crop listings and login details." },
-    { words: ["language", "hindi", "english"], answer: "Use the top-left dropdown to change the language." }
-  ];
-
-  function sendMessage() {
-    const input = document.getElementById("chatInput");
-    const message = input.value.trim().toLowerCase();
-    if (!message) return;
-
-    addMessage("You", message);
-
-    let found = false;
-    for (let pair of keywords) {
-      for (let word of pair.words) {
-        if (message.includes(word)) {
-          addMessage("Bot", pair.answer);
-          found = true;
-          break;
-        }
-      }
-      if (found) break;
-    }
-
-    if (!found) {
-      addMessage("Bot", "🤔 Sorry, I didn’t understand that. Try keywords like 'crop', 'price', or 'weather'.");
-    }
-
-    input.value = "";
-  }
-
-  function addMessage(sender, text) {
-    const chat = document.getElementById("chatMessages");
-    const msg = document.createElement("div");
-    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
-  }
-</script>
-
+    document.addEventListener("DOMContentLoaded", function() {
+      const script = document.createElement("script");
+      script.src = "https://app.gpt-trainer.com/widget-asset.min.js";
+      script.defer = true;
+      document.body.appendChild(script);
+    });
+  </script>
 </body>
 </html>
